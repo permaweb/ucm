@@ -1,4 +1,28 @@
-# OrderBook Contract
+# Universal Content Marketplace (UCM) Contract
+
+## Overview
+
+The Universal Content Marketplace (UCM) is a revolutionary protocol built on the permaweb, specifically designed to enable trustless exchange of atomic assets. It empowers creators and users alike to interact, trade, and transact with any form of digital content, from images and music to videos, papers, components, and even applications.
+
+## Features
+
+* Trustless Exchange: UCM provides a decentralized infrastructure that eliminates the need for intermediaries or central authorities. Users can securely exchange atomic assets on the permaweb with full control and ownership over their content.
+
+* Permanent Storage: Leveraging the permaweb technology of Arweave, UCM ensures the permanence of content. No more worries about data loss or removal, as assets stored on the permaweb remain accessible and verifiable forever.
+
+* Open Protocol: UCM is an open protocol, allowing developers and creators to integrate and build on top of it. The protocol is designed to be extensible, providing opportunities for future innovation and interoperability.
+
+* SmartWeave Integration: UCM leverages the SmartWeave contract system on Arweave, enabling seamless execution of the protocol's functionalities. SmartWeave ensures the trust and transparency of transactions while minimizing the need for additional development.
+
+## Getting Started
+
+To use the Universal Content Marketplace, follow these steps:
+
+Install the required dependencies.
+1. Deploy the UCM SmartWeave contract on the Arweave network.
+2. Integrate the UCM protocol into your application using the provided API documentation.
+3. Customize and configure the marketplace to meet your specific needs.
+4. Enable users to trade and interact with atomic assets on the permaweb using the UCM protocol.
 
 ## Developers
 
@@ -9,15 +33,29 @@ yarn build
 yarn deploy
 ```
 
-## Summary
+## Documentation
 
-The orderbook contract is a standalone contract that is built to trade PST + FCP 2 atomic tokens.
+Detailed documentation for the Universal Content Marketplace is available on the [wiki](https://ucm-wiki.g8way.io). It includes information on installation, contract deployment, API usage, and customization options. Please refer to the documentation for comprehensive instructions on utilizing the UCM protocol effectively.
 
-A PST is a SmartWeave Contract that has a `balances` object and `transfer` and `balance` functions. It allows both wallets and contracts to hold token balances. Also a `name` and `ticker` property for composability.
+## Contributing
 
-A FCP2 (Foreign Call Protocol 2) is a SmartWeave Contract that not only contains the characteristics of a PST, but includes `allow` and `claim` functions, with a `claimable` array, that allows token balance holders to allow or provide permission for others to `claim` tokens from them. This is a useful mechanism for an orderbook.
+We welcome contributions from the community to enhance and improve the Universal Content Marketplace. If you have any ideas, bug reports, or feature requests, please submit them via the issue tracker. We appreciate your support in making UCM even better!
 
-This project includes an orderbook, for FCP2 atomic tokens, these tokens can be applied to digital assets as well as digital tokens.
+
+## License
+
+The Universal Content Marketplace is released under the [UDL License](https://zempq24srrznl75y5gffqikjei4zr4bxrfzowfmtv6d4zoem73pq.arweave.net/yRj4a5KMctX_uOmKWCFJIjmY8DeJcusVk6-HzLiM_t8#h.58w8zd209d81). You are free to use, modify, and distribute the protocol, subject to the terms and conditions outlined in the license.
+
+## Contact
+
+If you have any questions, suggestions, or inquiries regarding the Universal Content Marketplace, please contact us at [wiki](https://ucm-wiki.g8way.io) We're excited to hear from you!
+
+
+
+----
+
+Notes:
+
 
 ## How does it work?
 
