@@ -10,6 +10,7 @@
   "recentRewards": {},
   "U": "KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw",
 	"transferable": true,
+  "canEvolve": true,
   "contributors": {
     "percent": 10,
     "tiers": {

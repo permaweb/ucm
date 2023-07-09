@@ -10,6 +10,7 @@ import { buyback } from "./cron/buyback.js";
 import { reward } from "./cron/reward.js";
 import { cancelClaim } from './write/cancel-claim.js';
 import { contributorMint } from './write/contributor-mint.js'
+import { evolve } from './write/evolve.js'
 
 export async function handle(state, action) {
   validate(state);
