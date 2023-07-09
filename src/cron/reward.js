@@ -6,7 +6,7 @@ import { sum, values, keys, assoc } from "ramda";
 // feed distribution object in to allocate function
 const DAY = 720;
 const TOTAL_SUPPLY = 26_280_000 * 1e6;
-const HALVING_SUPPLY = 26_280_000 * 1e6;
+const HALVING_SUPPLY = TOTAL_SUPPLY * .9;
 const ORIGIN_HEIGHT = 1209700;
 const CYCLE_INTERVAL = DAY * 365; // 1 year
 

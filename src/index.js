@@ -9,6 +9,7 @@ import { claim } from "./write/claim.js";
 import { buyback } from "./cron/buyback.js";
 import { reward } from "./cron/reward.js";
 import { cancelClaim } from './write/cancel-claim.js';
+import { contributorMint } from './write/contributor-mint.js'
 
 export async function handle(state, action) {
   validate(state);
@@ -36,6 +37,10 @@ export async function handle(state, action) {
       return allow(state, action).fold(handleError, (result) => result);
     case "claim":
       return claim(state, action).fold(handleError, (result) => result);
+    case "contributorMint":
+      return contributorMint(state, action).fold(handleError, (result) => result);
+    case "evolve":
+      return evolve(state, action)
     default:
       throw new ContractError("No Function Found");
   }

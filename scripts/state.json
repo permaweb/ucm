@@ -8,7 +8,53 @@
   "streaks": {},
   "divisbility": 6,
   "recentRewards": {},
-  "lastReward": 0,
   "U": "KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw",
-	"transferable": true
+	"transferable": true,
+  "contributors": {
+    "percent": 10,
+    "tiers": {
+      "one": {
+        "percent": 50,
+        "members": {
+          "vh-NTHVvlKZqRxc8LyyTNok65yQ55a_PJ1zWLb9G2JI": {
+            "amount": 10,
+            "lastMint": 0
+          },
+          "uf_FqRvLqjnFMc8ZzGkF4qWKuNmUIQcYP0tPlCGORQk": {
+            "amount": 10,
+            "lastMint": 0
+          },
+          "vince": {
+            "amount": 10,
+            "lastMint": 0
+          }  
+        }
+      },
+      "two": {
+        "percent": 10,
+        "members": {
+          "justin": {
+            "amount": 10,
+            "lastMint": 0
+          }
+        }
+
+      },
+      "three": {
+        "percent": 10,
+        "members": {
+          
+        }
+      },
+      "four": {
+        "percent": 30,
+        "members": {
+          "forward": {
+            "amount": 100,
+            "lastMint": 0
+          }
+        }
+      }
+    }
+  }
 }

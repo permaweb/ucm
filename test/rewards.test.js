@@ -31,7 +31,7 @@ test("create rewards for cycle1", async () => {
 
   assert.equal(
     result.balances["vh-NTHVvlKZqRxc8LyyTNok65yQ55a_PJ1zWLb9G2JI"],
-    21000000000
+    18900000000
   );
   assert.ok(true);
 });
