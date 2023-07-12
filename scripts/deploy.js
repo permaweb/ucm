@@ -5,29 +5,13 @@ import fs from 'fs'
 const jwk = JSON.parse(fs.readFileSync(process.argv[2], 'utf-8'))
 const src = fs.readFileSync('./dist/index.js', 'utf-8')
 const warp = WarpFactory.forMainnet().use(new DeployPlugin())
-//const initState = fs.readFileSync('./full-state.json', 'utf-8')
+const initState = JSON.parse(fs.readFileSync('./scripts/state.json', 'utf-8'))
 
 async function main() {
   const result = await warp.deploy({
     wallet: new ArweaveSigner(jwk),
     src,
-    initState: JSON.stringify({
-      pairs: [],
-      name: "Universal Content Marketplace",
-      ticker: '$PIXL',
-      balances: {},
-      claimable: [],
-      lastReward: 0,
-      streaks: {},
-      settings: [
-        ['isTradeable', true],
-        ['website', 'https://zAR-wiki.arweave.dev'],
-				['logo', '']
-      ],
-      recentRewards: {},
-      U: 'KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw',
-			transferable: true
-    }),
+    initState: JSON.stringify(initState),
     //initState,
     evaluationManifest: {
       evaluationOptions: {

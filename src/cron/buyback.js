@@ -28,17 +28,44 @@ export async function buyback(state) {
   }
 
   let uInventory = zAR_U.orders.reduce((a, o) => o.price * o.quantity + a, 0);
-  let purchaseU = uInventory < uBalance ? uInventory : uBalance;
+  let response = null
+  
+  if (uInventory >= uBalance) {
+    // createOrder
+    response = await CreateOrder(state, {
+      caller: SmartWeave.contract.id,
+      input: {
+        pair: [U, SmartWeave.contract.id],
+        qty: uBalance,
+        transaction: "INTERNAL_TRANSFER",
+      },
+    });
+  } else {
+    // first look and see if there are any buy orders [U, PIXL] by this contract
+    const orderToUpdate = await zAR_U.orders.find(o => o.creator === SmartWeave.contract.id)
+    if (orderToUpdate) {
+      orderToUpdate.originalQuantity = uBalance
+      orderToUpdate.quantity = uBalance
+      orderToUpdate.price = Math.floor(orderToUpdate.price * 1.1)
+    } else {
+      response = await CreateOrder(state, {
+        caller: SmartWeave.contract.id,
+        input: {
+          pair: [U, SmartWeave.contract.id],
+          qty: uBalance,
+          transaction: "INTERNAL_TRANSFER",
+          price: zAR_U?.priceData?.vwap || 1000
+        },
+      });
+    }
+    // first look for market price if found create a limit order at market price
+    
+    // dutch auction
+  }
+  
 
-  // createOrder
-  const response = await CreateOrder(state, {
-    caller: SmartWeave.contract.id,
-    input: {
-      pair: [U, SmartWeave.contract.id],
-      qty: purchaseU,
-      transaction: "INTERNAL_TRANSFER",
-    },
-  });
+  
+
   // burn zAR
   response.state.balances[SmartWeave.contract.id] = 0;
   if (response.result.status === "success") {
@@ -47,5 +74,3 @@ export async function buyback(state) {
     return state;
   }
 }
-
-// match orders

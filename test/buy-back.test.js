@@ -67,16 +67,16 @@ test("buyback ", async () => {
       },
     ],
     claimable: [],
-    name: "BazAR",
-    ticker: "zAR",
+    name: "UCM",
+    ticker: "PIXL",
     recentRewards: {},
     lastReward: 0,
   };
 
   const { buyback } = await import("../src/cron/buyback.js");
   const response = await buyback(state);
-  //console.log(JSON.stringify(response, null, 2));
-  assert.equal(response.pairs[0].priceData.vwap, 100);
+  console.log(JSON.stringify(response, null, 2));
+  assert.equal(response?.pairs[0]?.priceData?.vwap, 100);
   assert.ok(true);
 });
 

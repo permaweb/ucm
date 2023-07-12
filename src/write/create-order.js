@@ -366,10 +366,7 @@ export default function matchOrder(input, orderbook) {
           input: {
             function: "transfer",
             target: currentOrder.creator,
-            qty:
-              input.pair.from === U
-                ? Math.round(remainingQuantity * 0.995)
-                : remainingQuantity,
+            qty: Math.round(remainingQuantity * 0.995)
           },
         });
       }
@@ -403,10 +400,7 @@ export default function matchOrder(input, orderbook) {
         input: {
           function: "transfer",
           target: currentOrder.creator,
-          qty:
-            input.pair.from === U
-              ? Math.round(sendAmount * 0.995)
-              : sendAmount,
+          qty: input.pair.from === Math.round(sendAmount * 0.995),
         },
       });
 
@@ -481,8 +475,7 @@ export default function matchOrder(input, orderbook) {
     input: {
       function: "transfer",
       target: input.creator,
-      qty:
-        input.pair.to === U ? Math.round(receiveAmount * 0.995) : receiveAmount,
+      qty: Math.round(receiveAmount * 0.995),
     },
   });
   
