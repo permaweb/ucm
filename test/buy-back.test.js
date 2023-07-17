@@ -753,4 +753,533 @@ test("buyback a single PIXL for a large odd price", async () => {
 
 
 
+
+test("buyback PIXL, multiple sell orders exist adding up to the buyback amount", async () => {
+  globalThis.ContractAssert = function (expr, msg) {
+    if (expr) {
+      return null;
+    } else {
+      throw new Error(msg);
+    }
+  };
+
+  globalThis.ContractError = function (msg) {
+    return new Error(msg);
+  };
+
+  globalThis.SmartWeave = {
+    block: {
+      height: 100000,
+    },
+    transaction: {
+      id: "W44dNBTBJAeNyb4Bo1IG1TI96VGLNah6m8sy9HUKu5Y",
+    },
+    contract: {
+      id: "AHrcXuowqLwX-EzPhks-Hla3BY7gPMc9XpYDi2sHSCI",
+    },
+    contracts: {
+      write(id, input) {
+        //console.log(id, input);
+        return Promise.resolve({ type: "ok" });
+      },
+      readContractState(id) {
+        if (id === U) {
+          return Promise.resolve({
+            balances: {
+              "AHrcXuowqLwX-EzPhks-Hla3BY7gPMc9XpYDi2sHSCI": 10000,
+            },
+          });
+        }
+        //console.log('readState', id)
+        return Promise.resolve({});
+      },
+    },
+  };
+  const state = {
+    U: "KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw",
+    balances: {},
+    pairs: [
+      {
+        pair: [globalThis.SmartWeave.contract.id, U],
+        orders: [
+          {
+            id: "xkKyDgsr360TVgy07XwbWOuWXUD2WdXil_Npk8wx8Qg",
+            transfer: "_cgC5BGpH9A_HWIOd1FA0L1nxL0etq_xaOA7JxmK9f8",
+            creator: "jnbRhoH3JGTdRz0Y9X-gh-eosrbIpdxs58DPTtlOVE8",
+            token: globalThis.SmartWeave.contract.id,
+            price: 5000,
+            quantity: 1,
+            originalQuantity: 1,
+          },
+          {
+            id: "xkKyDgsr360TVgy07XwbWOuWXUD2WdXil_Npk8wx8Qg",
+            transfer: "_cgC5BGpH9A_HWIOd1FA0L1nxL0etq_xaOA7JxmK9f8",
+            creator: "jnbRhoH3JGTdRz0Y9X-gh-eosrbIpdxs58DPTtlOVE8",
+            token: globalThis.SmartWeave.contract.id,
+            price: 5000,
+            quantity: 1,
+            originalQuantity: 1,
+          }
+        ],
+        priceData: {},
+      },
+    ],
+    claimable: [],
+    name: "UCM",
+    ticker: "PIXL",
+    recentRewards: {},
+    lastReward: 0,
+  };
+
+  const { buyback } = await import("../src/cron/buyback.js");
+  const response = await buyback(state);
+  assert.equal(response?.pairs[0]?.orders[0], undefined);
+  assert.ok(true);
+});
+
+
+test("buyback PIXL, multiple sell orders exist, enough U to buy all of 1 order and part of another", async () => {
+  globalThis.ContractAssert = function (expr, msg) {
+    if (expr) {
+      return null;
+    } else {
+      throw new Error(msg);
+    }
+  };
+
+  globalThis.ContractError = function (msg) {
+    return new Error(msg);
+  };
+
+  globalThis.SmartWeave = {
+    block: {
+      height: 100000,
+    },
+    transaction: {
+      id: "W44dNBTBJAeNyb4Bo1IG1TI96VGLNah6m8sy9HUKu5Y",
+    },
+    contract: {
+      id: "AHrcXuowqLwX-EzPhks-Hla3BY7gPMc9XpYDi2sHSCI",
+    },
+    contracts: {
+      write(id, input) {
+        //console.log(id, input);
+        return Promise.resolve({ type: "ok" });
+      },
+      readContractState(id) {
+        if (id === U) {
+          return Promise.resolve({
+            balances: {
+              "AHrcXuowqLwX-EzPhks-Hla3BY7gPMc9XpYDi2sHSCI": 10000,
+            },
+          });
+        }
+        //console.log('readState', id)
+        return Promise.resolve({});
+      },
+    },
+  };
+  const state = {
+    U: "KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw",
+    balances: {},
+    pairs: [
+      {
+        pair: [globalThis.SmartWeave.contract.id, U],
+        orders: [
+          {
+            id: "xkKyDgsr360TVgy07XwbWOuWXUD2WdXil_Npk8wx8Qg",
+            transfer: "_cgC5BGpH9A_HWIOd1FA0L1nxL0etq_xaOA7JxmK9f8",
+            creator: "jnbRhoH3JGTdRz0Y9X-gh-eosrbIpdxs58DPTtlOVE8",
+            token: globalThis.SmartWeave.contract.id,
+            price: 5000,
+            quantity: 1,
+            originalQuantity: 1,
+          },
+          {
+            id: "xkKyDgsr360TVgy07XwbWOuWXUD2WdXil_Npk8wx8Qg",
+            transfer: "_cgC5BGpH9A_HWIOd1FA0L1nxL0etq_xaOA7JxmK9f8",
+            creator: "jnbRhoH3JGTdRz0Y9X-gh-eosrbIpdxs58DPTtlOVE8",
+            token: globalThis.SmartWeave.contract.id,
+            price: 5000,
+            quantity: 3,
+            originalQuantity: 1,
+          }
+        ],
+        priceData: {},
+      },
+    ],
+    claimable: [],
+    name: "UCM",
+    ticker: "PIXL",
+    recentRewards: {},
+    lastReward: 0,
+  };
+
+  const { buyback } = await import("../src/cron/buyback.js");
+  const response = await buyback(state);
+  assert.equal(response?.pairs[0]?.orders.reduce((acc, current) => acc + current.quantity, 0), 2);
+  assert.equal(response?.pairs[0]?.orders[0]?.price, 5000);
+  assert.ok(true);
+});
+
+
+
+test("buyback PIXL, multiple sell orders exist with a different price, enough U to buy all of 1 order and part of another", async () => {
+  globalThis.ContractAssert = function (expr, msg) {
+    if (expr) {
+      return null;
+    } else {
+      throw new Error(msg);
+    }
+  };
+
+  globalThis.ContractError = function (msg) {
+    return new Error(msg);
+  };
+
+  globalThis.SmartWeave = {
+    block: {
+      height: 100000,
+    },
+    transaction: {
+      id: "W44dNBTBJAeNyb4Bo1IG1TI96VGLNah6m8sy9HUKu5Y",
+    },
+    contract: {
+      id: "AHrcXuowqLwX-EzPhks-Hla3BY7gPMc9XpYDi2sHSCI",
+    },
+    contracts: {
+      write(id, input) {
+        //console.log(id, input);
+        return Promise.resolve({ type: "ok" });
+      },
+      readContractState(id) {
+        if (id === U) {
+          return Promise.resolve({
+            balances: {
+              "AHrcXuowqLwX-EzPhks-Hla3BY7gPMc9XpYDi2sHSCI": 11000,
+            },
+          });
+        }
+        //console.log('readState', id)
+        return Promise.resolve({});
+      },
+    },
+  };
+  const state = {
+    U: "KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw",
+    balances: {},
+    pairs: [
+      {
+        pair: [globalThis.SmartWeave.contract.id, U],
+        orders: [
+          {
+            id: "xkKyDgsr360TVgy07XwbWOuWXUD2WdXil_Npk8wx8Qg",
+            transfer: "_cgC5BGpH9A_HWIOd1FA0L1nxL0etq_xaOA7JxmK9f8",
+            creator: "jnbRhoH3JGTdRz0Y9X-gh-eosrbIpdxs58DPTtlOVE8",
+            token: globalThis.SmartWeave.contract.id,
+            price: 5000,
+            quantity: 1,
+            originalQuantity: 1,
+          },
+          {
+            id: "xkKyDgsr360TVgy07XwbWOuWXUD2WdXil_Npk8wx8Qg",
+            transfer: "_cgC5BGpH9A_HWIOd1FA0L1nxL0etq_xaOA7JxmK9f8",
+            creator: "jnbRhoH3JGTdRz0Y9X-gh-eosrbIpdxs58DPTtlOVE8",
+            token: globalThis.SmartWeave.contract.id,
+            price: 6000,
+            quantity: 3,
+            originalQuantity: 1,
+          }
+        ],
+        priceData: {},
+      },
+    ],
+    claimable: [],
+    name: "UCM",
+    ticker: "PIXL",
+    recentRewards: {},
+    lastReward: 0,
+  };
+
+  const { buyback } = await import("../src/cron/buyback.js");
+  const response = await buyback(state);
+  assert.equal(response?.pairs[0]?.orders[0]?.quantity, 2);
+  assert.equal(response?.pairs[0]?.orders[0]?.price, 6000);
+  assert.ok(true);
+});
+
+
+test("buyback PIXL, multiple sell orders exist with a different price, enough U to buy all of 1 order and part of another, and still have 500 sub U left over", async () => {
+  globalThis.ContractAssert = function (expr, msg) {
+    if (expr) {
+      return null;
+    } else {
+      throw new Error(msg);
+    }
+  };
+
+  globalThis.ContractError = function (msg) {
+    return new Error(msg);
+  };
+
+  globalThis.SmartWeave = {
+    block: {
+      height: 100000,
+    },
+    transaction: {
+      id: "W44dNBTBJAeNyb4Bo1IG1TI96VGLNah6m8sy9HUKu5Y",
+    },
+    contract: {
+      id: "AHrcXuowqLwX-EzPhks-Hla3BY7gPMc9XpYDi2sHSCI",
+    },
+    contracts: {
+      write(id, input) {
+        //console.log(id, input);
+        return Promise.resolve({ type: "ok" });
+      },
+      readContractState(id) {
+        if (id === U) {
+          return Promise.resolve({
+            balances: {
+              "AHrcXuowqLwX-EzPhks-Hla3BY7gPMc9XpYDi2sHSCI": 11500,
+            },
+          });
+        }
+        //console.log('readState', id)
+        return Promise.resolve({});
+      },
+    },
+  };
+  const state = {
+    U: "KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw",
+    balances: {},
+    pairs: [
+      {
+        pair: [globalThis.SmartWeave.contract.id, U],
+        orders: [
+          {
+            id: "xkKyDgsr360TVgy07XwbWOuWXUD2WdXil_Npk8wx8Qg",
+            transfer: "_cgC5BGpH9A_HWIOd1FA0L1nxL0etq_xaOA7JxmK9f8",
+            creator: "jnbRhoH3JGTdRz0Y9X-gh-eosrbIpdxs58DPTtlOVE8",
+            token: globalThis.SmartWeave.contract.id,
+            price: 50,
+            quantity: 10,
+            originalQuantity: 1,
+          },
+          {
+            id: "xkKyDgsr360TVgy07XwbWOuWXUD2WdXil_Npk8wx8Qg",
+            transfer: "_cgC5BGpH9A_HWIOd1FA0L1nxL0etq_xaOA7JxmK9f8",
+            creator: "jnbRhoH3JGTdRz0Y9X-gh-eosrbIpdxs58DPTtlOVE8",
+            token: globalThis.SmartWeave.contract.id,
+            price: 60,
+            quantity: 30,
+            originalQuantity: 1,
+          }
+        ],
+        priceData: {},
+      },
+    ],
+    claimable: [],
+    name: "UCM",
+    ticker: "PIXL",
+    recentRewards: {},
+    lastReward: 0,
+  };
+
+  const { buyback } = await import("../src/cron/buyback.js");
+  const response = await buyback(state);
+  assert.equal(response?.pairs[0]?.orders[0]?.quantity, 20);
+  assert.equal(response?.pairs[0]?.orders[0]?.price, 60);
+  assert.ok(true);
+});
+
+
+test("buyback PIXL, multiple(3) sell orders exist with a different price, enough U to buy part of the first order", async () => {
+  globalThis.ContractAssert = function (expr, msg) {
+    if (expr) {
+      return null;
+    } else {
+      throw new Error(msg);
+    }
+  };
+
+  globalThis.ContractError = function (msg) {
+    return new Error(msg);
+  };
+
+  globalThis.SmartWeave = {
+    block: {
+      height: 100000,
+    },
+    transaction: {
+      id: "W44dNBTBJAeNyb4Bo1IG1TI96VGLNah6m8sy9HUKu5Y",
+    },
+    contract: {
+      id: "AHrcXuowqLwX-EzPhks-Hla3BY7gPMc9XpYDi2sHSCI",
+    },
+    contracts: {
+      write(id, input) {
+        //console.log(id, input);
+        return Promise.resolve({ type: "ok" });
+      },
+      readContractState(id) {
+        if (id === U) {
+          return Promise.resolve({
+            balances: {
+              "AHrcXuowqLwX-EzPhks-Hla3BY7gPMc9XpYDi2sHSCI": 600,
+            },
+          });
+        }
+        //console.log('readState', id)
+        return Promise.resolve({});
+      },
+    },
+  };
+  const state = {
+    U: "KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw",
+    balances: {},
+    pairs: [
+      {
+        pair: [globalThis.SmartWeave.contract.id, U],
+        orders: [
+          {
+            id: "xkKyDgsr360TVgy07XwbWOuWXUD2WdXil_Npk8wx8Qg",
+            transfer: "_cgC5BGpH9A_HWIOd1FA0L1nxL0etq_xaOA7JxmK9f8",
+            creator: "jnbRhoH3JGTdRz0Y9X-gh-eosrbIpdxs58DPTtlOVE8",
+            token: globalThis.SmartWeave.contract.id,
+            price: 50,
+            quantity: 14,
+            originalQuantity: 1,
+          },
+          {
+            id: "xkKyDgsr360TVgy07XwbWOuWXUD2WdXil_Npk8wx8Qg",
+            transfer: "_cgC5BGpH9A_HWIOd1FA0L1nxL0etq_xaOA7JxmK9f8",
+            creator: "jnbRhoH3JGTdRz0Y9X-gh-eosrbIpdxs58DPTtlOVE8",
+            token: globalThis.SmartWeave.contract.id,
+            price: 60,
+            quantity: 30,
+            originalQuantity: 1,
+          },
+          {
+            id: "xkKyDgsr360TVgy07XwbWOuWXUD2WdXil_Npk8wx8Qg",
+            transfer: "_cgC5BGpH9A_HWIOd1FA0L1nxL0etq_xaOA7JxmK9f8",
+            creator: "jnbRhoH3JGTdRz0Y9X-gh-eosrbIpdxs58DPTtlOVE8",
+            token: globalThis.SmartWeave.contract.id,
+            price: 60,
+            quantity: 10,
+            originalQuantity: 1,
+          }
+        ],
+        priceData: {},
+      },
+    ],
+    claimable: [],
+    name: "UCM",
+    ticker: "PIXL",
+    recentRewards: {},
+    lastReward: 0,
+  };
+
+  const { buyback } = await import("../src/cron/buyback.js");
+  const response = await buyback(state);
+  assert.equal(response?.pairs[0]?.orders.reduce((acc, current) => acc + current.quantity, 0), 42);
+  assert.equal(response?.pairs[0]?.orders[0]?.price, 50);
+  assert.ok(true);
+});
+
+
+test("buyback PIXL, multiple(3) sell orders exist with a different price, enough U to buy all the orders and have 500 leftover", async () => {
+  globalThis.ContractAssert = function (expr, msg) {
+    if (expr) {
+      return null;
+    } else {
+      throw new Error(msg);
+    }
+  };
+
+  globalThis.ContractError = function (msg) {
+    return new Error(msg);
+  };
+
+  globalThis.SmartWeave = {
+    block: {
+      height: 100000,
+    },
+    transaction: {
+      id: "W44dNBTBJAeNyb4Bo1IG1TI96VGLNah6m8sy9HUKu5Y",
+    },
+    contract: {
+      id: "AHrcXuowqLwX-EzPhks-Hla3BY7gPMc9XpYDi2sHSCI",
+    },
+    contracts: {
+      write(id, input) {
+        //console.log(id, input);
+        return Promise.resolve({ type: "ok" });
+      },
+      readContractState(id) {
+        if (id === U) {
+          return Promise.resolve({
+            balances: {
+              "AHrcXuowqLwX-EzPhks-Hla3BY7gPMc9XpYDi2sHSCI": 3600,
+            },
+          });
+        }
+        //console.log('readState', id)
+        return Promise.resolve({});
+      },
+    },
+  };
+  const state = {
+    U: "KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw",
+    balances: {},
+    pairs: [
+      {
+        pair: [globalThis.SmartWeave.contract.id, U],
+        orders: [
+          {
+            id: "xkKyDgsr360TVgy07XwbWOuWXUD2WdXil_Npk8wx8Qg",
+            transfer: "_cgC5BGpH9A_HWIOd1FA0L1nxL0etq_xaOA7JxmK9f8",
+            creator: "jnbRhoH3JGTdRz0Y9X-gh-eosrbIpdxs58DPTtlOVE8",
+            token: globalThis.SmartWeave.contract.id,
+            price: 50,
+            quantity: 14,
+            originalQuantity: 1,
+          },
+          {
+            id: "xkKyDgsr360TVgy07XwbWOuWXUD2WdXil_Npk8wx8Qg",
+            transfer: "_cgC5BGpH9A_HWIOd1FA0L1nxL0etq_xaOA7JxmK9f8",
+            creator: "jnbRhoH3JGTdRz0Y9X-gh-eosrbIpdxs58DPTtlOVE8",
+            token: globalThis.SmartWeave.contract.id,
+            price: 60,
+            quantity: 30,
+            originalQuantity: 1,
+          },
+          {
+            id: "xkKyDgsr360TVgy07XwbWOuWXUD2WdXil_Npk8wx8Qg",
+            transfer: "_cgC5BGpH9A_HWIOd1FA0L1nxL0etq_xaOA7JxmK9f8",
+            creator: "jnbRhoH3JGTdRz0Y9X-gh-eosrbIpdxs58DPTtlOVE8",
+            token: globalThis.SmartWeave.contract.id,
+            price: 60,
+            quantity: 10,
+            originalQuantity: 1,
+          }
+        ],
+        priceData: {},
+      },
+    ],
+    claimable: [],
+    name: "UCM",
+    ticker: "PIXL",
+    recentRewards: {},
+    lastReward: 0,
+  };
+
+  const { buyback } = await import("../src/cron/buyback.js");
+  const response = await buyback(state);
+  console.log(response?.pairs[0]?.orders)
+  assert.equal(response?.pairs[0]?.orders[0], undefined);
+  assert.ok(true);
+});
+
+
 test.run();
