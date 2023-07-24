@@ -10,7 +10,10 @@ import { buyback } from "./cron/buyback.js";
 import { reward } from "./cron/reward.js";
 import { cancelClaim } from './write/cancel-claim.js';
 import { contributorMint } from './write/contributor-mint.js'
+import { contributorChg } from './write/contributor-chg.js'
 import { evolve } from './write/evolve.js'
+
+const identity = x => x
 
 export async function handle(state, action) {
   async function CreateOrderPlusBuyback(state, action) {
@@ -41,13 +44,15 @@ export async function handle(state, action) {
     case "balance":
       return balance(state, action);
     case "transfer":
-      return transfer(state, action).fold(handleError, (result) => result);
+      return transfer(state, action).fold(handleError, identity);
     case "allow":
-      return allow(state, action).fold(handleError, (result) => result);
+      return allow(state, action).fold(handleError, identity);
     case "claim":
-      return claim(state, action).fold(handleError, (result) => result);
+      return claim(state, action).fold(handleError, identity);
     case "contributorMint":
-      return contributorMint(state, action).fold(handleError, (result) => result);
+      return contributorMint(state, action).fold(handleError, identity);
+    case "contributorChg":
+      return contributorChg(state, action).fold(handleError, identity);
     case "evolve":
       return evolve(state, action)
     default:
