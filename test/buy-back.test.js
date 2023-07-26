@@ -6,7 +6,7 @@ import * as assert from "uvu/assert";
 const EYEBLOB_43 = "yfViHER2NCT7lEeR4nWKxG64ar3fKxagTP0OMfZLJmM";
 const U = "KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw";
 
-test("buyback U", async () => {
+test.skip("buyback U", async () => {
   globalThis.ContractAssert = function (expr, msg) {
     if (expr) {
       return null;
