@@ -85,8 +85,8 @@ test("buy order", async () => {
   };
   const response = await handle(state, action);
 
-  console.log(JSON.stringify(response, null, 2));
-  //assert.equal(response.state.pairs[0].priceData.vwap, 100)
+  //console.log(JSON.stringify(response, null, 2));
+  assert.equal(response.state.pairs[0].priceData.vwap, 100)
   assert.equal(response.result.status, "success");
   assert.ok(true);
 });

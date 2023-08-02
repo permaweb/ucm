@@ -11,6 +11,7 @@ export const CreateOrder = async (state, action) => {
   const usedPair = input.pair;
   const qty = input.qty;
   const price = input.price;
+  const max = input?.max || Number.MAX_SAFE_INTEGER;
   let tokenTx = input.transaction;
   let balances = state.balances;
 
@@ -160,6 +161,11 @@ export const CreateOrder = async (state, action) => {
       },
       sortedOrderbook
     );
+    /** only proceed with purchase if maxPrice is less than max bid flag */
+    const maxPrice = matches.reduce((a, v) => v.price > a ? v.price : a, 0)
+    if (maxPrice > max) {
+      throw new Error('can not purchase item it is greater than max bid')
+    }
     // Update orderbook accordingly
     state.pairs[pairIndex].orders = orderbook;
 
@@ -317,7 +323,7 @@ export default function matchOrder(input, orderbook) {
 
   // the remaining tokens to be matched with an order
   let remainingQuantity = input.quantity;
-  
+
   // loop through orders against this order
   //for (let i = 0; i < orderbook.length; i++) {
   const newOrderbook = orderbook.reduce((acc, currentOrder) => {
@@ -343,7 +349,7 @@ export default function matchOrder(input, orderbook) {
     // set the total amount of tokens we would receive
     // from this order
     fillAmount = Math.floor(remainingQuantity * (input.price ?? reversePrice));
-    
+
     // the input order creator receives this much
     // of the tokens from the current order
     let receiveFromCurrent = 0;
@@ -354,7 +360,7 @@ export default function matchOrder(input, orderbook) {
 
       // reduce the current order in the loop
       currentOrder.quantity -= fillAmount;
-      
+
       // fill the remaining tokens
       receiveAmount += receiveFromCurrent;
 
@@ -392,7 +398,7 @@ export default function matchOrder(input, orderbook) {
       // from this order
       remainingQuantity -= sendAmount;
 
-      
+
       // send tokens to the current order's creator
       foreignCalls.push({
         txID: SmartWeave.transaction.id,
@@ -438,7 +444,7 @@ export default function matchOrder(input, orderbook) {
     //if (remainingQuantity === 0) break;
     return acc
   }, [])
-  
+
   if (remainingQuantity > 0) {
     // if the input order is not completely filled,
     // and it is a limit order, push it to the orderbook
@@ -465,7 +471,7 @@ export default function matchOrder(input, orderbook) {
         },
       });
     }
-    
+
   }
 
   // send tokens to the input order's creator
@@ -478,7 +484,7 @@ export default function matchOrder(input, orderbook) {
       qty: Math.round(receiveAmount * 0.995),
     },
   });
-  
+
   return {
     orderbook: newOrderbook,
     foreignCalls,

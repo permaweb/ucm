@@ -18,14 +18,17 @@ const identity = x => x
 export async function handle(state, action) {
   async function CreateOrderPlusBuyback(state, action) {
     const result = await CreateOrder(state, action)
-    // do non U, buyback here
-    // look for orders that U is for sell, for Token
-    // if there is, then try to trade via createOrder
+    // burn non U
     return result
   }
 
   validate(state);
-  state = reward(state);
+
+  // only run reward cron on create orders
+  if (action.input.function === "createOrder") {
+    state = reward(state);
+  }
+
   // do buyback
   if (action.input.function === "createOrder" && !action.input.price) {
     state = await buyback(state);

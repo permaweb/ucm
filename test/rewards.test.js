@@ -17,18 +17,18 @@ test("create rewards for cycle1", async () => {
     streaks: {
       "vh-NTHVvlKZqRxc8LyyTNok65yQ55a_PJ1zWLb9G2JI": {
         days: 5,
-        lastHeight: 10000,
+        lastHeight: 1209770,
       },
       "9x24zjvs9DA5zAz2DmqBWAg6XcxrrE-8w3EkpwRm4e4": {
         days: 1,
-        lastHeight: 10000,
+        lastHeight: 1209771,
       },
     },
     lastReward: 0,
   };
   const { reward } = await import("../src/cron/reward.js");
   const result = await reward(state);
-
+  //console.log(result)
   assert.equal(
     result.balances["vh-NTHVvlKZqRxc8LyyTNok65yQ55a_PJ1zWLb9G2JI"],
     18900000000
