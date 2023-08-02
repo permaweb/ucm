@@ -1,0 +1,88 @@
+{
+  "U": "KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw",
+  "balances": {},
+  "canEvolve": true,
+  "claimable": [],
+  "divisibility": 6,
+  "lastReward": 0,
+  "name": "Universal Content Marketplace",
+  "originHeight": 1232228,
+  "pairs": [],
+  "recentRewards": {},
+  "streaks": {},
+  "ticker": "PIXL",
+  "transferable": true,
+  "contributors": {
+    "percent": 10,
+    "tiers": {
+      "one": {
+        "members": {
+          "uf_FqRvLqjnFMc8ZzGkF4qWKuNmUIQcYP0tPlCGORQk": {
+            "amount": 10,
+            "lastMint": 0
+          },
+          "HnKoL7ftH0BU3eUveKayuLpKu0XPnRehgBPu1GitZsQ": {
+            "amount": 10,
+            "lastMint": 0
+          },
+          "vh-NTHVvlKZqRxc8LyyTNok65yQ55a_PJ1zWLb9G2JI": {
+            "amount": 10,
+            "lastMint": 0
+          },
+          "A_nS8Da8uIK6RlC2UkZik2xQ83Lt1jMGin-SCQvoMI4": {
+            "amount": 10,
+            "lastMint": 0
+          }
+        },
+        "percent": 50
+      },
+      "two": {
+        "members": {
+          "9x24zjvs9DA5zAz2DmqBWAg6XcxrrE-8w3EkpwRm4e4": {
+            "amount": 10,
+            "lastMint": 0
+          },
+          "SEB": {
+            "amount": 10,
+            "lastMint": 0
+          },
+          "GITI": {
+            "amount": 10,
+            "lastMint": 0
+          }
+        },
+        "percent": 17
+      },
+      "three": {
+        "members": {
+          "89tR0-C1m3_sCWCoVCChg4gFYKdiH5_ZDyZpdJ2DDRw": {
+            "amount": 10,
+            "lastMint": 0
+          },
+          "DMyJZy6_C9a-HCfX0A1uogh92VBV1CjUwifXr7NaGsY": {
+            "amount": 10,
+            "lastMint": 0
+          },
+          "vLRHFqCw1uHu75xqB4fCDW-QxpkpJxBtFD9g4QYUbfw": {
+            "amount": 10,
+            "lastMint": 0
+          },
+          "SMft-XozLyxl0ztM-gPSYKvlZVCBiiftNIb4kGFI7wg": {
+            "amount": 10,
+            "lastMint": 0
+          }
+        },
+        "percent": 3
+      },
+      "four": {
+        "members": {
+          "forward": {
+            "amount": 10,
+            "lastMint": 0
+          }
+        },
+        "percent": 30
+      }
+    }
+  }
+}
