@@ -1,5 +1,6 @@
 import { CreateOrder } from "../write/create-order.js";
 
+const DUTCH = 1.01
 export async function buyback(state) {
   const U = state.U
   const uState = await SmartWeave.contracts.readContractState(U);
@@ -30,43 +31,46 @@ export async function buyback(state) {
   //   return state;
   // }
 
-  let uInventory = zAR_U.orders.reduce((a, o) => o.price * o.quantity + a, 0);
+  // let uInventory = zAR_U.orders.reduce((a, o) => {
+  //   if (o.creator === SmartWeave.contract.id) {
+  //     return a
+  //   }
+  //   return o.price * o.quantity + a
+  // }, 0);
   let response = null
 
-  if (uInventory >= uBalance) {
-    // createOrder
-    // response = await CreateOrder(state, {
-    //   caller: SmartWeave.contract.id,
-    //   input: {
-    //     pair: [U, SmartWeave.contract.id],
-    //     qty: uBalance,
-    //     transaction: "INTERNAL_TRANSFER",
-    //   },
-    // });
+  // if (uInventory > 0 && uBalance > 0) {
+  //   // lets buy some PIXL
+  //   // createOrder
+  //   response = await CreateOrder(state, {
+  //     caller: SmartWeave.contract.id,
+  //     input: {
+  //       pair: [U, SmartWeave.contract.id],
+  //       qty: uBalance,
+  //       transaction: "INTERNAL_TRANSFER",
+  //     },
+  //   });
+  // } else {
+  // first look and see if there are any buy orders [U, PIXL] by this contract
+  const orderToUpdate = await zAR_U.orders.find(o => o.creator === SmartWeave.contract.id)
+
+  if (orderToUpdate) {
+    let price = Math.floor(orderToUpdate.price * DUTCH)
+    orderToUpdate.originalQuantity = uBalance
+    orderToUpdate.quantity = uBalance
+    orderToUpdate.price = price
   } else {
-    // first look and see if there are any buy orders [U, PIXL] by this contract
-    const orderToUpdate = await zAR_U.orders.find(o => o.creator === SmartWeave.contract.id)
-
-    if (orderToUpdate) {
-      let price = Math.floor(orderToUpdate.price * 1.1)
-      orderToUpdate.originalQuantity = Math.floor(uBalance / price)
-      orderToUpdate.quantity = Math.floor(uBalance / price)
-      orderToUpdate.price = Math.floor(orderToUpdate.price * 1.1)
-    } else {
-      let price = zAR_U?.priceData?.vwap || 100
-      response = await CreateOrder(state, {
-        caller: SmartWeave.contract.id,
-        input: {
-          pair: [U, SmartWeave.contract.id],
-          qty: Math.floor(uBalance / price),
-          transaction: "INTERNAL_TRANSFER",
-          price
-        },
-      });
-    }
-    // first look for market price if found create a limit order at market price
-
-    // dutch auction
+    let price = zAR_U?.priceData?.vwap || 100
+    response = await CreateOrder(state, {
+      caller: SmartWeave.contract.id,
+      input: {
+        pair: [U, SmartWeave.contract.id],
+        qty: uBalance,
+        transaction: "INTERNAL_TRANSFER",
+        price
+      },
+    });
+    //}
   }
   if (response) {
     // burn zAR

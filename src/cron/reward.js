@@ -24,6 +24,17 @@ export function reward(state) {
     return state; // do not run mint
   }
 
+  state.streaks = keys(state.streaks).reduce((a, k) => {
+    if (state.streaks[k].lastHeight > (SmartWeave.block.height - (DAY * 2))) {
+      return { ...a, [k]: state.streaks[k] }
+    }
+    return a
+  }, {})
+  // if no streaks not reward
+  if (keys(state.streaks).length === 0) {
+    return state
+  }
+
   const streaks = assignPoints(state.streaks);
   // allocate reward
   state.recentRewards = allocate(streaks, reward);

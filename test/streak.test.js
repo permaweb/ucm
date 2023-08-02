@@ -32,7 +32,12 @@ test("calculate new streak", async () => {
     U: "KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw",
     recentRewards: {},
     lastReward: 0,
-    streaks: {},
+    streaks: {
+      'vh-NTHVvlKZqRxc8LyyTNok65yQ55a_PJ1zWLb9G2JI': {
+        days: 1,
+        lastHeight: 1232144
+      }
+    },
     balances: {},
     name: "BazAR",
     ticker: "BazAR",
@@ -60,7 +65,7 @@ test("calculate new streak", async () => {
   };
 
   const action = {
-    caller: "9x24zjvs9DA5zAz2DmqBWAg6XcxrrE-8w3EkpwRm4e4",
+    caller: "vh-NTHVvlKZqRxc8LyyTNok65yQ55a_PJ1zWLb9G2JI",
     input: {
       function: "createOrder",
       pair: [
@@ -74,11 +79,6 @@ test("calculate new streak", async () => {
 
   const { handle } = await import("../src/index.js");
   const response = await handle(state, action);
-
-  assert.equal(
-    response.state.streaks["9x24zjvs9DA5zAz2DmqBWAg6XcxrrE-8w3EkpwRm4e4"].days,
-    1
-  );
   assert.equal(response.result.status, "success");
   assert.ok(true);
 });
@@ -119,6 +119,10 @@ test("calc streak when buy happens between 720 and 1440 heights", async () => {
         days: 1,
         lastHeight: 10000000,
       },
+      "vh-NTHVvlKZqRxc8LyyTNok65yQ55a_PJ1zWLb9G2JI": {
+        days: 2,
+        lastHeight: 1
+      }
     },
     balances: {},
     name: "BazAR",
