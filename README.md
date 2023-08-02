@@ -98,7 +98,7 @@ const { originalTxId } = await write(TOKEN_CONTRACT, { function: 'allow', target
 Buy needs to complete the purchase by calling createOrder on the orderbook contract
 
 ```js
-await write(ORDERBOOK_CONTRACT, { function: 'createOrder', transaction: originalTxId, qty: 1000 })
+await write(ORDERBOOK_CONTRACT, { function: 'createOrder', transaction: originalTxId, qty: 1000, max: 1000 })
 ```
 
 ---
@@ -112,7 +112,3 @@ If for some reason the seller gets cold feet, they can cancel the order.
 ```js
 await write(ORDERBOOK_CONTRACT, { function: 'cancelOrder', orderID: ORDERID })
 ```
-
-> NOTE:
->
-> One thing to note, don't use remoteStateSyncEnabled when working with this contract, it really confuses the state, for some reason the remote DRE does not update the last internalWrites, I think there is a bug with the DRE and multiple internalWrites, so I would recommend you sync state on load, then make these calls without remoteStateSync enabled.
