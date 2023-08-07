@@ -10,7 +10,7 @@ const HALVING_SUPPLY = TOTAL_SUPPLY * .9;
 const ORIGIN_HEIGHT = 1232228;
 const CYCLE_INTERVAL = DAY * 365; // 1 year
 
-// reward sponsors of stamped assets
+// reward streaks
 export function reward(state) {
   if (state.lastReward + DAY >= SmartWeave.block.height) {
     return state;
@@ -36,6 +36,7 @@ export function reward(state) {
   }
 
   const streaks = assignPoints(state.streaks);
+  console.log(streaks)
   // allocate reward
   state.recentRewards = allocate(streaks, reward);
   // update balances
@@ -47,8 +48,11 @@ export function reward(state) {
 
 function assignPoints(streaks) {
   return keys(streaks).reduce((a, k) => {
-    if (streaks[k].days > 0) {
+    if (streaks[k].days > 0 && streaks[k].days < 31) {
       const multiplier = streaks[k].days - 1;
+      return assoc(k, 1 + multiplier * 0.1, a);
+    } else if (streaks[k].days >= 31) {
+      const multiplier = 30;
       return assoc(k, 1 + multiplier * 0.1, a);
     } else {
       return a;

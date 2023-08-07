@@ -67,9 +67,6 @@ function calculateStreak(lastHeight = 0, currentHeight = 0, streak = 0) {
   if (streak === 0) {
     return { days: 1, lastHeight: currentHeight };
   }
-  if (streak >= 30) {
-    return { days: 1, lastHeight: currentHeight };
-  }
   const diff = currentHeight - lastHeight;
   if (diff <= 720) {
     return { days: streak, lastHeight };
@@ -1612,6 +1609,7 @@ function reward(state) {
     return state;
   }
   const streaks = assignPoints(state.streaks);
+  console.log(streaks);
   state.recentRewards = allocate(streaks, reward2);
   state = updateBalances({ state, rewards: state.recentRewards });
   state.lastReward = SmartWeave.block.height;
@@ -1619,8 +1617,11 @@ function reward(state) {
 }
 function assignPoints(streaks) {
   return keys_default(streaks).reduce((a, k) => {
-    if (streaks[k].days > 0) {
+    if (streaks[k].days > 0 && streaks[k].days < 31) {
       const multiplier = streaks[k].days - 1;
+      return assoc_default(k, 1 + multiplier * 0.1, a);
+    } else if (streaks[k].days >= 31) {
+      const multiplier = 30;
       return assoc_default(k, 1 + multiplier * 0.1, a);
     } else {
       return a;

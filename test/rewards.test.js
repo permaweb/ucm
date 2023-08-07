@@ -5,7 +5,7 @@ import * as assert from "uvu/assert";
 test("create rewards for cycle1", async () => {
   globalThis.SmartWeave = {
     block: {
-      height: 1209775,
+      height: 1291228,
     },
   };
   const state = {
@@ -16,12 +16,12 @@ test("create rewards for cycle1", async () => {
     ticker: "zAR",
     streaks: {
       "vh-NTHVvlKZqRxc8LyyTNok65yQ55a_PJ1zWLb9G2JI": {
-        days: 5,
-        lastHeight: 1209770,
+        days: 45,
+        lastHeight: 1291228,
       },
       "9x24zjvs9DA5zAz2DmqBWAg6XcxrrE-8w3EkpwRm4e4": {
         days: 1,
-        lastHeight: 1209771,
+        lastHeight: 1291228,
       },
     },
     lastReward: 0,
@@ -31,7 +31,7 @@ test("create rewards for cycle1", async () => {
   //console.log(result)
   assert.equal(
     result.balances["vh-NTHVvlKZqRxc8LyyTNok65yQ55a_PJ1zWLb9G2JI"],
-    18900000000
+    25920000000
   );
   assert.ok(true);
 });

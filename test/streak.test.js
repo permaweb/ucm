@@ -342,7 +342,7 @@ test("streak calc on 30 days and between 720 and 1440", async () => {
 
   assert.equal(
     response.state.streaks["9x24zjvs9DA5zAz2DmqBWAg6XcxrrE-8w3EkpwRm4e4"].days,
-    1
+    31
   );
   assert.equal(response.result.status, "success");
   assert.ok(true);

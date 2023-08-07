@@ -3,10 +3,6 @@ export function calculateStreak(lastHeight = 0, currentHeight = 0, streak = 0) {
     return { days: 1, lastHeight: currentHeight };
   }
 
-  if (streak >= 30) {
-    return { days: 1, lastHeight: currentHeight };
-  }
-
   const diff = currentHeight - lastHeight;
 
   if (diff <= 720) {
