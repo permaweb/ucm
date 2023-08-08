@@ -12,6 +12,12 @@
   "streaks": {},
   "ticker": "PIXL",
   "transferable": true,
+  "settings": [
+    [
+      "logo",
+      "BPw8MuhvLQjJ328KwqnHIdzTRLBj9dGgOUv0AgTiRAg"
+    ]
+  ],
   "contributors": {
     "percent": 10,
     "tiers": {

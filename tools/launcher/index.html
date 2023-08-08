@@ -19,11 +19,11 @@
     <div class="hero-content flex-col">
       <h1 class="text-4xl font-mono">UCM Launcher</h1>
       <form id="launchform" class="mt-16 space-y-8 w-full md:w-[600px]">
-        <div class="form-control">
+        <!-- <div class="form-control">
           <label class="label">Seed Phrase</label>
           <textarea id="passphrase" class="textarea textarea-bordered w-full"
             placeholder="enter 12 word seed phrase"></textarea>
-        </div>
+        </div> -->
         <div>
           <button class="btn">Deploy</button>
         </div>
@@ -52,6 +52,7 @@
   </div>
 
   <script type="module">
+    import { ArweaveWebWallet } from 'https://unpkg.com/arweave-wallet-connector@1.0.2/lib/index.js'
     import {
       WarpFactory,
       SourceType,
@@ -60,86 +61,82 @@
       DeployPlugin,
       ArweaveSigner,
     } from "https://unpkg.com/warp-contracts-plugin-deploy@1.0.8/bundles/web.bundle.min.js";
-    import { getKeyPairFromMnemonic } from "https://esm.sh/human-crypto-keys@0.1.4/lib/index.js";
 
     const warp = WarpFactory.forMainnet().use(new DeployPlugin());
-    const arweave = window.Arweave.init({})
+    const arweave = window.Arweave.init({
+      host: 'arweave.net',
+      port: 443,
+      protocol: 'https'
+    })
 
     document
       .getElementById("launchform")
       .addEventListener("submit", async (e) => {
         e.preventDefault();
-        const passphrase = document.getElementById("passphrase").value;
-        if (passphrase.split(' ').length !== 12) {
-          return alert('ERROR: Invalid Passphrase!')
-        }
 
-        document.getElementById("busy").checked = true;
+        try {
+          document.getElementById("busy").checked = true;
 
-        const { jwk } = await seedToJWK(passphrase);
-        const signer = new ArweaveSigner(jwk);
-        const creator = await arweave.wallets.jwkToAddress(jwk)
+          const wallet = new ArweaveWebWallet({
+            name: 'Atomic Asset Contract Deployer'
+          })
+          wallet.setUrl('arweave.app')
+          await wallet.connect()
 
-        const src = await fetch("./contract.js").then((res) => res.text());
-        const state = await fetch("./state.json").then((res) => res.json());
+          // deploy source
+          // const src = await fetch('/contract.js').then(res => res.text())
+          // const srcTx = await arweave.createTransaction({ data: src })
+          // srcTx.addTag('Content-Type', 'application/javascript')
+          // const srcResult = await globalThis.arweaveWallet.dispatch(srcTx)
+          // const srcId = srcResult.id
 
-        const initState = JSON.stringify({
-          ...state,
-          creator
-        });
+          // deploy contract
+          const state = await fetch('/state.json').then(res => res.json())
+          const creator = await globalThis.arweaveWallet.getActiveAddress()
+          const initState = JSON.stringify({
+            ...state,
+            creator
+          });
 
-        const result = await warp.deploy({
-          wallet: signer,
-          src,
-          initState,
-          evaluationManifest: {
-            evaluationOptions: {
-              sourceType: SourceType.WARP_SEQUENCER,
-              internalWrites: true,
-              unsafeClient: "skip",
-              allowBigInt: true,
+          const CONTRACT_SRC = 'LBcYEl2zwKDApj1Cow1_BYyiicxVV7OCZTexsjk6mB4'
+
+          const blob = await fetch('/ucm.png').then(res => res.blob())
+
+          const tx = await arweave.createTransaction({ data: await blob.arrayBuffer() })
+          const tags = [
+            { name: 'App-Name', value: 'SmartWeaveContract' },
+            { name: 'App-Version', value: '0.3.0' },
+            { name: 'Contract-Src', value: CONTRACT_SRC },
+            { name: 'Init-State', value: initState },
+            {
+              name: 'Contract-Manifest', value: JSON.stringify({
+                evaluationOptions: {
+                  sourceType: 'redstone-sequencer',
+                  unsafeClient: 'skip',
+                  allowBigInt: true
+                }
+              })
             },
-          },
-        }, {
-          tags: [
-            { name: 'type', value: 'token' },
-            { name: 'title', value: '$PIXL: Token for the Universal Content Marketplace' },
-            { name: 'description', value: 'UCM offers a functional onchain order book as a public good that anyone can build an interface for.' }
-          ]
-        });
+            { name: 'Content-Type', value: 'image/png' },
+            { name: 'Type', value: 'token' },
+            { name: 'Title', value: '$PIXL: Token for the Universal Content Marketplace' },
+            { name: 'Description', value: 'UCM offers a functional onchain order book as a public good that anyone can build an interface for.' }
+          ].map(t => tx.addTag(t.name, t.value))
 
+          const contractResult = await globalThis.arweaveWallet.dispatch(tx)
 
-        document.getElementById('contractId').innerHTML = result.contractTxId
-        document.getElementById('srcTxId').innerHTML = result.srcTxId
+          await warp.register(contractResult.id, 'node2')
 
-        document.getElementById("passphrase").value = "";
-        document.getElementById("busy").checked = false;
-        document.getElementById("my-modal").checked = true;
+          document.getElementById('contractId').innerHTML = contractResult.id
+          document.getElementById('srcTxId').innerHTML = CONTRACT_SRC
+
+          document.getElementById("busy").checked = false;
+          document.getElementById("my-modal").checked = true;
+        } catch (e) {
+          if (e) { console.log(e) }
+          document.getElementById("busy").checked = false;
+        }
       });
-
-    async function pkcs8ToJwk(key) {
-      const imported = await window.crypto.subtle.importKey(
-        "pkcs8",
-        key,
-        { name: "RSA-PSS", hash: "SHA-256" },
-        true,
-        ["sign"]
-      );
-      const jwk = await window.crypto.subtle.exportKey("jwk", imported);
-      delete jwk.key_ops;
-      delete jwk.alg;
-      return jwk;
-    }
-
-    async function seedToJWK(passphrase) {
-      let keyPair = await getKeyPairFromMnemonic(
-        passphrase,
-        { id: "rsa", modulusLength: 4096 },
-        { privateKeyFormat: "pkcs8-der" }
-      );
-      const jwk = await pkcs8ToJwk(keyPair.privateKey);
-      return { jwk };
-    }
   </script>
 </body>
 
