@@ -57,15 +57,15 @@ export async function buyback(state) {
   if (orderToUpdate) {
     let price = Math.floor(orderToUpdate.price * DUTCH)
     orderToUpdate.originalQuantity = uBalance
-    orderToUpdate.quantity = uBalance
+    orderToUpdate.quantity = Math.floor(uBalance / price)
     orderToUpdate.price = price
   } else {
-    let price = zAR_U?.priceData?.vwap || 100
+    let price = zAR_U?.priceData?.vwap || .001
     response = await CreateOrder(state, {
       caller: SmartWeave.contract.id,
       input: {
         pair: [U, SmartWeave.contract.id],
-        qty: uBalance,
+        qty: Math.floor(uBalance / price),
         transaction: "INTERNAL_TRANSFER",
         price
       },

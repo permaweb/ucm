@@ -12,7 +12,8 @@ const CYCLE_INTERVAL = DAY * 365; // 1 year
 
 // reward streaks
 export function reward(state) {
-  if (state.lastReward + DAY >= SmartWeave.block.height) {
+
+  if (Number(state.lastReward) + DAY >= SmartWeave.block.height) {
     return state;
   }
   if (keys(state.streaks).length < 1) {
@@ -36,7 +37,7 @@ export function reward(state) {
   }
 
   const streaks = assignPoints(state.streaks);
-  console.log(streaks)
+  // console.log(streaks)
   // allocate reward
   state.recentRewards = allocate(streaks, reward);
   // update balances

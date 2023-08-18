@@ -5,7 +5,10 @@ import fs from 'fs'
 const warp = WarpFactory.forMainnet().use(new DeployPlugin())
 const jwk = JSON.parse(fs.readFileSync('./wallet.json', 'utf-8'))
 const signer = new ArweaveSigner(jwk)
-const ucm = 'XW_z0WhM5PsVD-nmyNm1pCK1za9uysu1vco1HS8DpIo'
+//const ucm = 'XW_z0WhM5PsVD-nmyNm1pCK1za9uysu1vco1HS8DpIo'
+//const ucm = 'V6fwgkTtbRJVu_yKGJM2RQ6bHte35_g0Sj2C_BIdScs'
+const ucm = 'IOtejAGHWiiwz4HuVDagKUldWDlhsaTnmXQStSqcsrw'
+
 async function main() {
   const src = fs.readFileSync('./dist/index.js', 'utf-8')
   const tx = await warp.createSource({ src }, signer)
