@@ -13,20 +13,20 @@ const CYCLE_INTERVAL = DAY * 365; // 1 year
 // reward streaks
 export function reward(state) {
 
-  if (Number(state.lastReward) + DAY >= SmartWeave.block.height) {
+  if (Number(state.lastReward) + DAY >= Number(SmartWeave.block.height)) {
     return state;
   }
   if (keys(state.streaks).length < 1) {
     return state;
   }
-  const { reward } = setReward(SmartWeave.block.height)({ state });
+  const { reward } = setReward(Number(SmartWeave.block.height))({ state });
 
   if (reward === 0) {
     return state; // do not run mint
   }
 
   state.streaks = keys(state.streaks).reduce((a, k) => {
-    if (state.streaks[k].lastHeight > (SmartWeave.block.height - (DAY * 2))) {
+    if (state.streaks[k].lastHeight > (Number(SmartWeave.block.height) - (DAY * 2))) {
       return { ...a, [k]: state.streaks[k] }
     }
     return a

@@ -221,7 +221,7 @@ export const CreateOrder = async (state, action) => {
 
           const streakUpdate = calculateStreak(
             state.streaks[buyer].lastHeight,
-            SmartWeave.block.height,
+            Number(SmartWeave.block.height),
             state.streaks[buyer].days
           );
           state.streaks[buyer] = streakUpdate;
