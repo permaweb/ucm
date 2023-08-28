@@ -1,4 +1,5 @@
 import { calculateStreak } from "../lib/streak-calc.js";
+import { claim } from './claim.js';
 
 let U = 'KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw'
 
@@ -47,18 +48,23 @@ export const CreateOrder = async (state, action) => {
     if (qty <= 0 || caller === SmartWeave.contract.id) {
       throw new ContractError("Invalid token transfer.");
     }
-    if (balances[caller] < qty) {
-      throw new ContractError(
-        "Caller balance not high enough to send " + qty + " token(s)."
-      );
-    }
+    const claimResult = claim(state, { caller: SmartWeave.contract.id, input: action.input }).fold(y => y, x => x)
+    // update state claim data
+    balances[SmartWeave.contract.id] = claimResult.state.balances[SmartWeave.contract.id]
+    state.claimable = claimResult.state.claimable
 
-    balances[caller] -= qty;
-    if (SmartWeave.contract.id in balances) {
-      balances[SmartWeave.contract.id] += qty;
-    } else {
-      balances[SmartWeave.contract.id] = qty;
-    }
+    // if (balances[caller] < qty) {
+    //   throw new ContractError(
+    //     "Caller balance not high enough to send " + qty + " token(s)."
+    //   );
+    // }
+
+    // balances[caller] -= qty;
+    // if (SmartWeave.contract.id in balances) {
+    //   balances[SmartWeave.contract.id] += qty;
+    // } else {
+    //   balances[SmartWeave.contract.id] = qty;
+    // }
   } else if (
     usedPair[1] === SmartWeave.contract.id &&
     tokenTx === "INTERNAL_TRANSFER"
