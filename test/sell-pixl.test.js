@@ -87,7 +87,7 @@ function setupCreateOrderAction() {
       pair: ["hY3jZrvejIjQmLjya3yarDyKNgdiG-BiR6GxG_X3rY8", "KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw"],
       qty: 1000 * 1e6,
       price: .01,
-      txID: "oeYUgBDGBql5-ik4DJ5cDvacwmYe03jx6A5pQK7DEBw",
+      transaction: "oeYUgBDGBql5-ik4DJ5cDvacwmYe03jx6A5pQK7DEBw",
     }
   }
 }
