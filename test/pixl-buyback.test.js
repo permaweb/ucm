@@ -42,11 +42,18 @@ test("create order with no limits but vwap set", async () => {
       id: "hY3jZrvejIjQmLjya3yarDyKNgdiG-BiR6GxG_X3rY8",
     },
     contracts: {
-      readContractState: () => Promise.resolve({
-        balances: {
-          "hY3jZrvejIjQmLjya3yarDyKNgdiG-BiR6GxG_X3rY8": 310000
+      readContractState: (id) => {
+        const VOUCH_DAO = "_z0ch80z_daDUFqC9jHjfOL8nekJcok4ZRkE_UesYsk"
+        if (id === VOUCH_DAO) {
+          return Promise.resolve({ vouched: { '9x24zjvs9DA5zAz2DmqBWAg6XcxrrE-8w3EkpwRm4e4': 1, '1BS7nloUNSDQhpN8cMNUKIfLeTDKDXSKKsqGqPWl_Jo': 1, 'vh-NTHVvlKZqRxc8LyyTNok65yQ55a_PJ1zWLb9G2JI': 1 } })
         }
-      }),
+
+        return Promise.resolve({
+          balances: {
+            "hY3jZrvejIjQmLjya3yarDyKNgdiG-BiR6GxG_X3rY8": 310000
+          }
+        })
+      },
       write: (id, input) => Promise.resolve({ type: "ok" }),
     },
     block: {

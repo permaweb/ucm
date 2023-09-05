@@ -33,15 +33,19 @@ test("buy multi sell order", async () => {
             },
           });
         }
+        const VOUCH_DAO = "_z0ch80z_daDUFqC9jHjfOL8nekJcok4ZRkE_UesYsk"
+        if (id === VOUCH_DAO) {
+          return Promise.resolve({ vouched: { '9x24zjvs9DA5zAz2DmqBWAg6XcxrrE-8w3EkpwRm4e4': 1, '1BS7nloUNSDQhpN8cMNUKIfLeTDKDXSKKsqGqPWl_Jo': 1, 'vh-NTHVvlKZqRxc8LyyTNok65yQ55a_PJ1zWLb9G2JI': 1 } })
+        }
         //console.log('readState', id)
         return Promise.resolve({});
       },
       write: (id, input) => {
-        
+
         if (id === U && input.function === "transfer") {
           console.log(input)
           //console.log(input.qty)
-        //   assert.equal(input.qty, 20000);
+          //   assert.equal(input.qty, 20000);
         }
         return Promise.resolve({ type: "ok" });
       },

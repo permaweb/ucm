@@ -14,6 +14,7 @@ import { contributorChg } from './write/contributor-chg.js'
 import { evolve } from './write/evolve.js'
 
 const identity = x => x
+const VOUCH_DAO = '_z0ch80z_daDUFqC9jHjfOL8nekJcok4ZRkE_UesYsk'
 
 export async function handle(state, action) {
   async function CreateOrderPlusBuyback(state, action) {
@@ -26,7 +27,8 @@ export async function handle(state, action) {
 
   // only run reward cron on create orders
   if (action.input.function === "createOrder") {
-    state = reward(state);
+    const vouched = await SmartWeave.contracts.readContractState(VOUCH_DAO).then(s => Object.keys(s.vouched)).catch(e => ([]))
+    state = reward(state, vouched);
   }
 
   // do buyback

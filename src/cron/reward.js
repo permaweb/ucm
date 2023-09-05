@@ -4,6 +4,8 @@ import { sum, values, keys, assoc } from "ramda";
 // create distribution object
 // identify the REWARD via halving cycle
 // feed distribution object in to allocate function
+// only vouched address
+
 const DAY = 720;
 const TOTAL_SUPPLY = 26_280_000 * 1e6;
 const HALVING_SUPPLY = TOTAL_SUPPLY * .9;
@@ -11,7 +13,7 @@ const ORIGIN_HEIGHT = 1232228;
 const CYCLE_INTERVAL = DAY * 365; // 1 year
 
 // reward streaks
-export function reward(state) {
+export function reward(state, vouched) {
 
   if (Number(state.lastReward) + DAY >= Number(SmartWeave.block.height)) {
     return state;
@@ -38,13 +40,25 @@ export function reward(state) {
 
   const streaks = assignPoints(state.streaks);
   // console.log(streaks)
+  // filter to vouched streaks
+  const vouchedStreaks = rewardVouched(streaks, vouched)
   // allocate reward
-  state.recentRewards = allocate(streaks, reward);
+  state.recentRewards = allocate(vouchedStreaks, reward);
   // update balances
   state = updateBalances({ state, rewards: state.recentRewards });
   // set lastReward
   state.lastReward = SmartWeave.block.height;
   return state;
+}
+
+function rewardVouched(streaks, vouched) {
+  return keys(streaks).reduce((a, k) => {
+    if (vouched.includes(k)) {
+      return assoc(k, streaks[k], a)
+    } else {
+      return a
+    }
+  }, {})
 }
 
 function assignPoints(streaks) {

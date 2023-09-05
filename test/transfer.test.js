@@ -11,6 +11,14 @@ globalThis.SmartWeave = {
   block: {
     height: 1209000,
   },
+  contracts: {
+    readContractState(id) {
+      const VOUCH_DAO = "_z0ch80z_daDUFqC9jHjfOL8nekJcok4ZRkE_UesYsk"
+      if (id === VOUCH_DAO) {
+        return Promise.resolve({ vouched: { '9x24zjvs9DA5zAz2DmqBWAg6XcxrrE-8w3EkpwRm4e4': 1, '1BS7nloUNSDQhpN8cMNUKIfLeTDKDXSKKsqGqPWl_Jo': 1, 'vh-NTHVvlKZqRxc8LyyTNok65yQ55a_PJ1zWLb9G2JI': 1 } })
+      }
+    }
+  }
 };
 
 test("transfer", async () => {
