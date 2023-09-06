@@ -48,11 +48,20 @@ export const CreateOrder = async (state, action) => {
     if (qty <= 0 || caller === SmartWeave.contract.id) {
       throw new ContractError("Invalid token transfer.");
     }
-    const claimResult = claim(state, { caller: SmartWeave.contract.id, input: action.input }).fold(y => y, x => x)
-    // update state claim data
-    balances[SmartWeave.contract.id] = claimResult.state.balances[SmartWeave.contract.id]
-    state.claimable = claimResult.state.claimable
-
+    if (state.claimable.find(claim => claim.from === action.caller && claim.txID === action.input.transaction)) {
+      const claimResult = claim(state, { caller: SmartWeave.contract.id, input: { ...action.input, txID: action.input.transaction } }).fold(m => {
+        throw new ContractError(
+          "ERROR trying to create order for PIXL: " + m
+        );
+      }, x => x)
+      // update state claim data
+      balances[SmartWeave.contract.id] = claimResult.state.balances[SmartWeave.contract.id]
+      state.claimable = claimResult.state.claimable
+    } else {
+      throw new ContractError(
+        "Can not claim balance for PIXL"
+      );
+    }
     // if (balances[caller] < qty) {
     //   throw new ContractError(
     //     "Caller balance not high enough to send " + qty + " token(s)."
