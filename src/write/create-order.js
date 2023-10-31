@@ -413,7 +413,6 @@ export default function matchOrder(input, orderbook) {
       // from this order
       remainingQuantity -= sendAmount;
 
-
       // send tokens to the current order's creator
       foreignCalls.push({
         txID: SmartWeave.transaction.id,
@@ -421,7 +420,7 @@ export default function matchOrder(input, orderbook) {
         input: {
           function: "transfer",
           target: currentOrder.creator,
-          qty: input.pair.from === Math.round(sendAmount * 0.995),
+          qty: Math.round(sendAmount * 0.995),
         },
       });
 
